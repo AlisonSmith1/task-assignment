@@ -5,10 +5,10 @@
       class="list-container"
       id="todoList"
       cdkDropList
-      [cdkDropListData]="unassignedTasks"
+      [cdkDropListData]="unassignedTasks()"
       (cdkDropListDropped)="drop($event)"
     >
-      @for (task of unassignedTasks; track task.id) {
+      @for (task of unassignedTasks(); track task.id) {
         <div class="task-item" cdkDrag>
           <strong>{{ task.title }}</strong>
           <button type="button" (click)="editUnassigment(task)">修改</button>
@@ -22,10 +22,11 @@
   <div class="column assignment-area">
     <div class="header">司機的行程</div>
 
-    @for (driver of driversCompare; track driver.id) {
+    @for (driver of driversCompare(); track driver.id) {
       <div
         class="driver-card"
         cdkDropList
+        [id]="driver.id.toString()"
         [cdkDropListData]="driver.tasks"
         (cdkDropListDropped)="drop($event)"
       >
@@ -38,8 +39,6 @@
             {{ task.title }}
             <button type="button" (click)="reasonDialog(task)">回溯</button>
           </div>
-        } @empty {
-          <p class="placeholder" style="color: #ccc; padding: 10px">拖曳任務至此</p>
         }
       </div>
     }

@@ -20,10 +20,10 @@ module.exports = () => {
   //   }
   for (let i = 0; i < 20; i++) {
     data.tasks.push({
-      id: (i + 1).toString(),
-      title: `訂單 ${String.fromCharCode(65 + (i % 26))}`,
+      id: i + 1,
+      title: `任務 ${String.fromCharCode(65 + (i % 26))}`,
       priority: faker.helpers.arrayElement(priorities),
-      status: `狀態 ${faker.number.int({ min: 1, max: 3 })}`,
+      status: 'Unassigned',
       createdAt: faker.date.past().getTime(),
       deadline: faker.date.future().getTime(),
       overrideHistory: [],
@@ -32,9 +32,9 @@ module.exports = () => {
   }
 
   // 2. Drivers
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     data.drivers.push({
-      id: (i + 1).toString(),
+      id: i + 1,
       name: faker.person.fullName(),
       tasks: [],
     });

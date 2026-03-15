@@ -14,5 +14,9 @@ export class Task {
   priority: 'High' | 'Medium' | 'Low' = 'Low';
   status: 'Unassigned' | 'Assigned' | 'Accepted' = 'Unassigned';
   deadline?: Date;
-  overrideHistory: LatestOverride[] = []; // 異常回溯
+  overrideHistory: LatestOverride[] = [];
+  snapshot?: {
+    title: string;
+    description: string;
+  };
 }
