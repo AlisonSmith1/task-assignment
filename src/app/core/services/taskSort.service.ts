@@ -1,12 +1,26 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Task } from '../models/task.model';
-import { map, tap } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  filter,
+  interval,
+  map,
+  Observable,
+  shareReplay,
+  switchMap,
+  tap,
+  throwError,
+  timer,
+} from 'rxjs';
+import { DiverSortService } from './diver-sort.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskSortService {
+  private diverSortService = inject(DiverSortService);
   private getPriorityWeight(priority: 'High' | 'Medium' | 'Low'): number {
     const weights = { High: 3, Medium: 2, Low: 1 };
     return weights[priority] || 0;
@@ -107,5 +121,36 @@ export class TaskSortService {
 
       return timeCreatedA - timeCreatedB;
     });
+  }
+
+  startSimulation() {
+    return interval(10000).pipe(
+      switchMap(() => this.getTasks()),
+      map((tasks) => tasks.filter((t) => t.status === 'Unassigned')),
+      filter((availableTasks) => availableTasks.length > 0),
+      map((availableTasks) => {
+        const task = availableTasks[Math.floor(Math.random() * availableTasks.length)];
+        const randomDriverId = Math.floor(Math.random() * 6) + 1;
+        return {
+          assignedTask: { ...task, status: 'Assigned' as const, driverId: randomDriverId },
+          driverId: randomDriverId,
+        };
+      }),
+      concatMap(({ assignedTask, driverId }) =>
+        this.updateTask(assignedTask).pipe(
+          switchMap(() => this.diverSortService.addTaskToDriver(driverId, assignedTask)),
+        ),
+      ),
+    );
+  }
+
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.apiUrl).pipe(
+      shareReplay(1),
+      catchError((err) => {
+        console.error('抓取任務失敗：', err);
+        return throwError(() => new Error('無法取得任務資料，請檢查後端是否啟動'));
+      }),
+    );
   }
 }

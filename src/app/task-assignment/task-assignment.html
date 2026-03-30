@@ -37,7 +37,14 @@
         @for (task of driver.tasks; track task.id) {
           <div class="task-item" cdkDrag [cdkDragDisabled]="true">
             {{ task.title }}
-            <button type="button" (click)="reasonDialog(task)">回溯</button>
+            <button
+              type="button"
+              (click)="reasonDialog(task)"
+              [disabled]="task.status == 'Accepted'"
+              [class.disabled-btn]="task.status == 'Accepted'"
+            >
+              回溯
+            </button>
           </div>
         }
       </div>

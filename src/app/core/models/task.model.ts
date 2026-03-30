@@ -10,9 +10,10 @@ export class Task {
   readonly createdAt: Date = new Date();
 
   title: string = '';
+  driverId?: number;
   description: string = '';
   priority: 'High' | 'Medium' | 'Low' = 'Low';
-  status: 'Unassigned' | 'Assigned' | 'Accepted' = 'Unassigned';
+  status: 'Unassigned' | 'Assigned' | 'InProgress' | 'Accepted' | 'Completed' = 'Unassigned';
   deadline?: Date;
   overrideHistory: LatestOverride[] = [];
   snapshot?: {

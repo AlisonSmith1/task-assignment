@@ -48,6 +48,17 @@ $drag-placeholder-color: #dae0ff;
   &:active {
     cursor: grabbing;
   }
+
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .disabled-btn {
+    color: #888;
+    border-color: #ddd;
+  }
 }
 
 .list-container,

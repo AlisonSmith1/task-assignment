@@ -34,6 +34,9 @@ import {
   imports: [CdkDrag, CdkDropList, DragDropModule],
 })
 export class TaskAssignment implements OnInit {
+  simulation: any;
+  simulationClompete: any;
+
   // 16+ Angular 新功能：使用 inject() 取代 constructor 注入
   // constructor(
   //   private taskSortService: TaskSortService,
@@ -100,6 +103,16 @@ export class TaskAssignment implements OnInit {
   //     });
   // }
   ngOnInit(): void {
+    this.simulation = this.taskSortService.startSimulation().subscribe({
+      next: () => console.log('模擬器：偵測中...'),
+      error: (err) => console.error('模擬器錯誤:', err),
+    });
+
+    this.simulationClompete = this.diverSortService.startSimulation().subscribe({
+      next: () => console.log('模擬器：偵測中...'),
+      error: (err) => console.error('模擬器錯誤:', err),
+    });
+
     if (this.unassignedTasks().length === 0) {
       this.taskSortService
         .fetchTasks()
@@ -125,6 +138,18 @@ export class TaskAssignment implements OnInit {
           },
           error: () => this.diverSortService.setDrivers(MOCK_DRIVERS),
         });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.simulation) {
+      this.simulation.unsubscribe();
+      console.log('模擬器已安全關閉');
+    }
+
+    if (this.simulationClompete) {
+      this.simulationClompete.unsubscribe();
+      console.log('模擬器已安全關閉');
     }
   }
 
@@ -193,6 +218,7 @@ export class TaskAssignment implements OnInit {
       });
   }
 
+  // 將任務池的任務移動到司機身上
   // drop(event: CdkDragDrop<Task[]>) {
   //   if (event.previousContainer === event.container) {
   //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -275,18 +301,27 @@ export class TaskAssignment implements OnInit {
   private handleTaskAssignmentChange(event: CdkDragDrop<Task[]>, task: Task) {
     const targetId = event.container.id;
     const isAssigning = targetId !== 'todoList';
+
+    if (isAssigning && task.status !== 'Unassigned') {
+      console.warn('該任務已被指派或狀態異常，無法重複指派');
+      return;
+    }
+
+    if (!isAssigning && task.status === 'Unassigned') {
+      return;
+    }
+
     const newStatus: Task['status'] = isAssigning ? 'Assigned' : 'Unassigned';
 
     const updatedTask: Task = {
       ...task,
       status: newStatus,
-      snapshot:
-        isAssigning && !task.snapshot
-          ? { title: task.title, description: task.description }
-          : task.snapshot,
     };
 
     this.taskSortService.updateTask(updatedTask).subscribe();
-    this.diverSortService.addTaskToDriver(Number(targetId), updatedTask);
+
+    if (isAssigning) {
+      this.diverSortService.addTaskToDriver(Number(targetId), updatedTask);
+    }
   }
 }
