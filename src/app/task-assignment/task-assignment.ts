@@ -35,7 +35,8 @@ import {
 })
 export class TaskAssignment implements OnInit {
   simulation: any;
-  simulationClompete: any;
+  simulationAccepted: any;
+  simulationComplete: any;
 
   // 16+ Angular 新功能：使用 inject() 取代 constructor 注入
   // constructor(
@@ -108,7 +109,12 @@ export class TaskAssignment implements OnInit {
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
-    this.simulationClompete = this.diverSortService.startSimulation().subscribe({
+    this.simulationAccepted = this.diverSortService.startSimulation().subscribe({
+      next: () => console.log('模擬器：偵測中...'),
+      error: (err) => console.error('模擬器錯誤:', err),
+    });
+
+    this.simulationComplete = this.diverSortService.startSimulationComplete().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
@@ -147,13 +153,16 @@ export class TaskAssignment implements OnInit {
       console.log('模擬器已安全關閉');
     }
 
-    if (this.simulationClompete) {
-      this.simulationClompete.unsubscribe();
+    if (this.simulationAccepted) {
+      this.simulationAccepted.unsubscribe();
+      console.log('模擬器已安全關閉');
+    }
+
+    if (this.simulationComplete) {
+      this.simulationComplete.unsubscribe();
       console.log('模擬器已安全關閉');
     }
   }
-
-  editUnassigment(task: Task) {}
 
   // reasonDialog(task: Task) {
   //   const dialogRef = this.dialog.open(ReasonDialog, {

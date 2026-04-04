@@ -13,7 +13,7 @@ export class Task {
   driverId?: number;
   description: string = '';
   priority: 'High' | 'Medium' | 'Low' = 'Low';
-  status: 'Unassigned' | 'Assigned' | 'InProgress' | 'Accepted' | 'Completed' = 'Unassigned';
+  status: 'Unassigned' | 'Assigned' | 'Accepted' | 'Completed' = 'Unassigned';
   deadline?: Date;
   overrideHistory: LatestOverride[] = [];
   snapshot?: {

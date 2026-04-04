@@ -11,7 +11,6 @@
       @for (task of unassignedTasks(); track task.id) {
         <div class="task-item" cdkDrag>
           <strong>{{ task.title }}</strong>
-          <button type="button" (click)="editUnassigment(task)">修改</button>
         </div>
       }
     </div>
@@ -35,17 +34,19 @@
         </div>
 
         @for (task of driver.tasks; track task.id) {
-          <div class="task-item" cdkDrag [cdkDragDisabled]="true">
-            {{ task.title }}
-            <button
-              type="button"
-              (click)="reasonDialog(task)"
-              [disabled]="task.status == 'Accepted'"
-              [class.disabled-btn]="task.status == 'Accepted'"
-            >
-              回溯
-            </button>
-          </div>
+          @if (task.status !== 'Completed') {
+            <div class="task-item" cdkDrag [cdkDragDisabled]="true">
+              {{ task.title }}
+              <button
+                type="button"
+                (click)="reasonDialog(task)"
+                [disabled]="task.status == 'Accepted'"
+                [class.disabled-btn]="task.status == 'Accepted'"
+              >
+                回溯
+              </button>
+            </div>
+          }
         }
       </div>
     }
