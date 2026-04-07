@@ -119,29 +119,29 @@ export class DiverSortService {
     );
   }
 
-  // 模擬任務已完成的邏輯，會每 40 秒從目前的司機資料中隨機抽選一個「已接受任務」，然後把它的狀態改成「已完成」
-  startSimulationComplete() {
-    return interval(40000).pipe(
-      map(() => this._drivers()),
-      map((drivers) =>
-        drivers
-          .flatMap((d) => d.tasks.map((t) => ({ ...t, parentDriverId: d.id })))
-          .filter((t) => t.status === 'Accepted'),
-      ),
-      filter((tasks) => tasks.length > 0),
-      map((tasks) => {
-        const selectedTask = tasks[Math.floor(Math.random() * tasks.length)];
-        return {
-          updatedTask: { ...selectedTask, status: 'Completed' as const },
-          driverId: selectedTask.parentDriverId,
-        };
-      }),
+  // // 模擬任務已完成的邏輯，會每 40 秒從目前的司機資料中隨機抽選一個「已接受任務」，然後把它的狀態改成「已完成」
+  // startSimulationComplete() {
+  //   return interval(40000).pipe(
+  //     map(() => this._drivers()),
+  //     map((drivers) =>
+  //       drivers
+  //         .flatMap((d) => d.tasks.map((t) => ({ ...t, parentDriverId: d.id })))
+  //         .filter((t) => t.status === 'Accepted'),
+  //     ),
+  //     filter((tasks) => tasks.length > 0),
+  //     map((tasks) => {
+  //       const selectedTask = tasks[Math.floor(Math.random() * tasks.length)];
+  //       return {
+  //         updatedTask: { ...selectedTask, status: 'Completed' as const },
+  //         driverId: selectedTask.parentDriverId,
+  //       };
+  //     }),
 
-      concatMap(({ updatedTask, driverId }) =>
-        this.addTaskToDriver(driverId, updatedTask).pipe(
-          concatMap(() => this.deleteTaskToDriver(driverId, updatedTask.id)),
-        ),
-      ),
-    );
-  }
+  //     concatMap(({ updatedTask, driverId }) =>
+  //       this.addTaskToDriver(driverId, updatedTask).pipe(
+  //         concatMap(() => this.deleteTaskToDriver(driverId, updatedTask.id)),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

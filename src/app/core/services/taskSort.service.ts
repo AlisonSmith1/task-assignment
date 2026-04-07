@@ -125,8 +125,7 @@ export class TaskSortService {
 
   startSimulation() {
     return interval(10000).pipe(
-      // switchMap(() => this.getTasks()),
-      map(() => this._tasks()),
+      switchMap(() => this.getTasks()),
       map((tasks) => tasks.filter((t) => t.status === 'Unassigned')),
       filter((availableTasks) => availableTasks.length > 0),
       map((availableTasks) => {
@@ -142,6 +141,16 @@ export class TaskSortService {
           switchMap(() => this.diverSortService.addTaskToDriver(driverId, assignedTask)),
         ),
       ),
+    );
+  }
+
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.apiUrl).pipe(
+      shareReplay(1),
+      catchError((err) => {
+        console.error('抓取任務失敗：', err);
+        return throwError(() => new Error('無法取得任務資料，請檢查後端是否啟動'));
+      }),
     );
   }
 }
