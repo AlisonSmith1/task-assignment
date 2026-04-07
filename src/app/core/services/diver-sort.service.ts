@@ -73,6 +73,22 @@ export class DiverSortService {
     );
   }
 
+  // 模擬任務完成後從司機卡片消失的邏輯，會把該任務從司機的任務列表裡刪除
+  deleteTaskToDriver(driverId: number, taskId: number): Observable<any> {
+    const targetDriver = this._drivers().find((d) => d.id === driverId);
+    if (!targetDriver) return of(null);
+
+    const updatedTasks = targetDriver.tasks.filter((t) => t.id !== taskId);
+
+    return this.http.patch(`${this.apiUrl}/${driverId}`, { tasks: updatedTasks }).pipe(
+      tap(() => {
+        this._drivers.update((drivers) =>
+          drivers.map((d) => (d.id === driverId ? { ...d, tasks: updatedTasks } : d)),
+        );
+      }),
+    );
+  }
+
   sortDrivers(drivers: Driver[]): Driver[] {
     return [...drivers].sort((a, b) => a.tasks.length - b.tasks.length);
   }
@@ -121,7 +137,11 @@ export class DiverSortService {
         };
       }),
 
-      concatMap(({ updatedTask, driverId }) => this.addTaskToDriver(driverId, updatedTask)),
+      concatMap(({ updatedTask, driverId }) =>
+        this.addTaskToDriver(driverId, updatedTask).pipe(
+          concatMap(() => this.deleteTaskToDriver(driverId, updatedTask.id)),
+        ),
+      ),
     );
   }
 }
