@@ -14,13 +14,13 @@ import {
   throwError,
   timer,
 } from 'rxjs';
-import { DiverSortService } from './diver-sort.service';
+import { DriverSortService } from './driver-sort.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskSortService {
-  private diverSortService = inject(DiverSortService);
+  private driverSortService = inject(DriverSortService);
   private getPriorityWeight(priority: 'High' | 'Medium' | 'Low'): number {
     const weights = { High: 3, Medium: 2, Low: 1 };
     return weights[priority] || 0;
@@ -139,7 +139,7 @@ export class TaskSortService {
       }),
       concatMap(({ assignedTask, driverId }) =>
         this.updateTask(assignedTask).pipe(
-          switchMap(() => this.diverSortService.addTaskToDriver(driverId, assignedTask)),
+          switchMap(() => this.driverSortService.addTaskToDriver(driverId, assignedTask)),
         ),
       ),
     );

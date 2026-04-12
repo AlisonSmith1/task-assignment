@@ -7,7 +7,7 @@ import { concatMap, filter, interval, map, Observable, of, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class DiverSortService {
+export class DriverSortService {
   private http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:3000/drivers';
 
@@ -55,57 +55,14 @@ export class DiverSortService {
     });
   }
 
-  // addTaskToDriver(driverId: number, task: Task): Observable<any> {
-  //   const targetDriver = this._drivers().find((d) => d.id === driverId);
-  //   if (!targetDriver) return of(null);
-
-  //   const isExists = targetDriver.tasks.some((t) => t.id === task.id);
-  //   const updatedTasks = isExists
-  //     ? targetDriver.tasks.map((t) => (t.id === task.id ? { ...task } : t))
-  //     : [...targetDriver.tasks, task];
-
-  //   return this.http.patch(`${this.apiUrl}/${driverId}`, { tasks: updatedTasks }).pipe(
-  //     tap(() => {
-  //       this._drivers.update((drivers) =>
-  //         drivers.map((d) => (d.id === driverId ? { ...d, tasks: updatedTasks } : d)),
-  //       );
-  //     }),
-  //   );
-  // }
-
-  addTaskToDriver(driverId: number | string, task: Task): Observable<any> {
-    console.log(`[Service] 準備將任務 ${task.title} 加入司機 ID: ${driverId}`);
-
+  addTaskToDriver(driverId: number, task: Task): Observable<any> {
     const targetDriver = this._drivers().find((d) => String(d.id) === String(driverId));
-
-    if (!targetDriver) {
-      console.error(`[Service] 找不到 ID 為 ${driverId} 的司機！任務掉入黑洞。`);
-      return of(null);
-    }
+    if (!targetDriver) return of(null);
 
     const isExists = targetDriver.tasks.some((t) => t.id === task.id);
     const updatedTasks = isExists
       ? targetDriver.tasks.map((t) => (t.id === task.id ? { ...task } : t))
       : [...targetDriver.tasks, task];
-
-    return this.http.patch(`${this.apiUrl}/${targetDriver.id}`, { tasks: updatedTasks }).pipe(
-      tap(() => {
-        this._drivers.update((drivers) =>
-          drivers.map((d) =>
-            String(d.id) === String(driverId) ? { ...d, tasks: updatedTasks } : d,
-          ),
-        );
-        console.log(`[Service] 成功更新司機 ${targetDriver.name} 的本地 Signal`);
-      }),
-    );
-  }
-
-  // 模擬任務完成後從司機卡片消失的邏輯，會把該任務從司機的任務列表裡刪除
-  deleteTaskToDriver(driverId: number, taskId: number): Observable<any> {
-    const targetDriver = this._drivers().find((d) => d.id === driverId);
-    if (!targetDriver) return of(null);
-
-    const updatedTasks = targetDriver.tasks.filter((t) => t.id !== taskId);
 
     return this.http.patch(`${this.apiUrl}/${driverId}`, { tasks: updatedTasks }).pipe(
       tap(() => {
@@ -146,16 +103,19 @@ export class DiverSortService {
     );
   }
 
-  // 模擬任務已完成的邏輯，會每 40 秒從目前的司機資料中隨機抽選一個「已接受任務」，然後把它的狀態改成「已完成」
   startSimulationComplete() {
-    return interval(40000).pipe(
+    return interval(45000).pipe(
       map(() => this._drivers()),
+
+      // http發送改記憶體更新
       map((drivers) =>
         drivers
           .flatMap((d) => d.tasks.map((t) => ({ ...t, parentDriverId: d.id })))
           .filter((t) => t.status === 'Accepted'),
       ),
+
       filter((tasks) => tasks.length > 0),
+
       map((tasks) => {
         const selectedTask = tasks[Math.floor(Math.random() * tasks.length)];
         return {
@@ -164,11 +124,7 @@ export class DiverSortService {
         };
       }),
 
-      concatMap(({ updatedTask, driverId }) =>
-        this.addTaskToDriver(driverId, updatedTask).pipe(
-          concatMap(() => this.deleteTaskToDriver(driverId, updatedTask.id)),
-        ),
-      ),
+      concatMap(({ updatedTask, driverId }) => this.addTaskToDriver(driverId, updatedTask)),
     );
   }
 }

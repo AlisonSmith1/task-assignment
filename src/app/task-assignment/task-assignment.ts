@@ -15,7 +15,7 @@ import { ReasonDialog } from '../reason-dialog/reason-dialog';
 import { MOCK_TASKS } from '../core/mocks/mock-data';
 import { TaskSortService } from '../core/services/taskSort.service';
 import { MOCK_DRIVERS } from '../core/mocks/mock-drivers';
-import { DiverSortService } from '../core/services/diver-sort.service';
+import { DriverSortService } from '../core/services/driver-sort.service';
 // import { Driver } from '../core/models/driver.model';
 import {
   CdkDrag,
@@ -42,7 +42,7 @@ export class TaskAssignment implements OnInit {
   // constructor(
   //   private taskSortService: TaskSortService,
   //   private dialog: MatDialog,
-  //   private diverSortService: DiverSortService,
+  //   private driverSortService: DriverSortService,
   //   private cdr: ChangeDetectorRef,
   // ) {}
 
@@ -64,13 +64,13 @@ export class TaskAssignment implements OnInit {
   }
 
   private taskSortService = inject(TaskSortService);
-  private diverSortService = inject(DiverSortService);
+  private driverSortService = inject(DriverSortService);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
 
   unassignedTasks = this.taskSortService.unassignedTasks;
-  driversCompare = this.diverSortService.driversCompare;
+  driversCompare = this.driverSortService.driversCompare;
 
   // ngOnInit(): void {
   //   // Tasks
@@ -89,17 +89,17 @@ export class TaskAssignment implements OnInit {
   //     });
 
   //   //  Drivers
-  //   this.diverSortService
+  //   this.driverSortService
   //     .getTasks()
   //     .pipe(
   //       takeUntilDestroyed(this.destroyRef),
   //       tap((drivers) => console.log('Fetched drivers:', drivers)),
   //     )
   //     .subscribe({
-  //       next: (data) => (this.driversCompare = this.diverSortService.sortDrivers(data)),
+  //       next: (data) => (this.driversCompare = this.driverSortService.sortDrivers(data)),
   //       error: (err) => {
   //         console.error('API 司機資料失敗，切換至 MOCK 資料', err);
-  //         this.driversCompare = this.diverSortService.sortDrivers(MOCK_DRIVERS);
+  //         this.driversCompare = this.driverSortService.sortDrivers(MOCK_DRIVERS);
   //       },
   //     });
   // }
@@ -109,12 +109,12 @@ export class TaskAssignment implements OnInit {
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
-    this.simulationAccepted = this.diverSortService.startSimulation().subscribe({
+    this.simulationAccepted = this.driverSortService.startSimulation().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
-    this.simulationComplete = this.diverSortService.startSimulationComplete().subscribe({
+    this.simulationComplete = this.driverSortService.startSimulationComplete().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
@@ -135,14 +135,14 @@ export class TaskAssignment implements OnInit {
     }
 
     if (this.driversCompare().length === 0) {
-      this.diverSortService
+      this.driverSortService
         .getTasks()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (data) => {
-            this.diverSortService.setDrivers(data);
+            this.driverSortService.setDrivers(data);
           },
-          error: () => this.diverSortService.setDrivers(MOCK_DRIVERS),
+          error: () => this.driverSortService.setDrivers(MOCK_DRIVERS),
         });
     }
   }
@@ -221,7 +221,7 @@ export class TaskAssignment implements OnInit {
 
         this.taskSortService.updateTask(updatedTask).subscribe({
           next: () => {
-            this.diverSortService.removeTaskFromDriver(task.id.toString());
+            this.driverSortService.removeTaskFromDriver(task.id.toString());
           },
         });
       });
@@ -267,11 +267,6 @@ export class TaskAssignment implements OnInit {
       return;
     } else {
       const movedTask = event.previousContainer.data[event.previousIndex];
-      const targetId = event.container.id;
-
-      if (targetId !== 'todoList') {
-        this.diverSortService.addTaskToDriver(Number(targetId), movedTask);
-      }
 
       this.handleTaskAssignmentChange(event, movedTask);
     }
@@ -315,22 +310,21 @@ export class TaskAssignment implements OnInit {
       console.warn('該任務已被指派或狀態異常，無法重複指派');
       return;
     }
-
-    if (!isAssigning && task.status === 'Unassigned') {
-      return;
-    }
+    if (!isAssigning && task.status === 'Unassigned') return;
 
     const newStatus: Task['status'] = isAssigning ? 'Assigned' : 'Unassigned';
+    const updatedTask: Task = { ...task, status: newStatus };
 
-    const updatedTask: Task = {
-      ...task,
-      status: newStatus,
-    };
-
-    this.taskSortService.updateTask(updatedTask).subscribe();
-
-    if (isAssigning) {
-      this.diverSortService.addTaskToDriver(Number(targetId), updatedTask);
-    }
+    this.taskSortService.updateTask(updatedTask).subscribe({
+      next: () => {
+        if (isAssigning) {
+          this.driverSortService.addTaskToDriver(Number(targetId), updatedTask).subscribe({
+            next: () => console.log(`成功指派任務給司機 ${targetId}`),
+            error: (err) => console.error('指派司機失敗', err),
+          });
+        }
+      },
+      error: (err) => console.error('更新任務狀態失敗', err),
+    });
   }
 }

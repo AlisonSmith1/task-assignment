@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DiverSortService } from './diver-sort.service';
+import { DriverSortService } from './driver-sort.service';
 
-describe('DiverSortService', () => {
-  let service: DiverSortService;
+describe('DriverSortService', () => {
+  let service: DriverSortService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DiverSortService);
+    service = TestBed.inject(DriverSortService);
   });
 
   it('should be created', () => {
