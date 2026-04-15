@@ -2,14 +2,15 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Driver } from '../models/driver.model';
 import { Task } from '../models/task.model';
-import { concatMap, filter, interval, map, Observable, of, tap } from 'rxjs';
+import { concatMap, filter, interval, map, Observable, of, tap, delay } from 'rxjs';
+import { MOCK_DRIVERS } from '../mocks/mock-drivers';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DriverSortService {
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/drivers';
+  // private readonly apiUrl = 'http://localhost:3000/drivers';
 
   private _drivers = signal<Driver[]>([]);
 
@@ -23,7 +24,8 @@ export class DriverSortService {
   }
 
   getTasks() {
-    return this.http.get<Driver[]>(this.apiUrl);
+    // return this.http.get<Driver[]>(this.apiUrl);
+    return of(MOCK_DRIVERS).pipe(delay(300));
   }
 
   // DiverSortService.ts
@@ -64,10 +66,12 @@ export class DriverSortService {
       ? targetDriver.tasks.map((t) => (t.id === task.id ? { ...task } : t))
       : [...targetDriver.tasks, task];
 
-    return this.http.patch(`${this.apiUrl}/${driverId}`, { tasks: updatedTasks }).pipe(
+    // return this.http.patch(`${this.apiUrl}/${driverId}`, { tasks: updatedTasks }).pipe(
+    return of({ success: true }).pipe(
+      delay(200),
       tap(() => {
         this._drivers.update((drivers) =>
-          drivers.map((d) => (d.id === driverId ? { ...d, tasks: updatedTasks } : d)),
+          drivers.map((d) => (d.id === targetDriver.id ? { ...d, tasks: updatedTasks } : d)),
         );
       }),
     );

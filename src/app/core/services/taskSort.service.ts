@@ -4,10 +4,12 @@ import { Task } from '../models/task.model';
 import {
   catchError,
   concatMap,
+  delay,
   filter,
   interval,
   map,
   Observable,
+  of,
   shareReplay,
   switchMap,
   tap,
@@ -15,6 +17,7 @@ import {
   timer,
 } from 'rxjs';
 import { DriverSortService } from './driver-sort.service';
+import { MOCK_TASKS } from '../mocks/mock-data';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +29,7 @@ export class TaskSortService {
     return weights[priority] || 0;
   }
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/tasks';
+  // private readonly apiUrl = 'http://localhost:3000/tasks';
 
   private _tasks = signal<Task[]>([]);
 
@@ -51,15 +54,17 @@ export class TaskSortService {
   //     ),
   //   );
   // }
-  fetchTasks() {
-    return this.http.get<any[]>(this.apiUrl).pipe(
-      map((tasks) =>
-        tasks.map((task) => ({
-          ...task,
-          createdAt: new Date(task.createdAt),
-          deadline: task.deadline ? new Date(task.deadline) : null,
-        })),
-      ),
+  fetchTasks(): Observable<any> {
+    // return this.http.get<any[]>(this.apiUrl).pipe(
+    return of(MOCK_TASKS).pipe(
+      delay(300),
+      // map((tasks) =>
+      //   tasks.map((task) => ({
+      //     ...task,
+      //     createdAt: new Date(task.createdAt),
+      //     deadline: task.deadline,
+      //   })),
+      // ),
       tap((tasks) => this._tasks.set(tasks)),
     );
   }
@@ -67,8 +72,9 @@ export class TaskSortService {
   // updateTask(task: any) {
   //   return this.http.patch(`${this.apiUrl}/${task.id}`, task);
   // }
-  updateTask(task: Task) {
-    return this.http.patch<Task>(`${this.apiUrl}/${task.id}`, task).pipe(
+  updateTask(task: Task): Observable<any> {
+    // return this.http.patch<Task>(`${this.apiUrl}/${task.id}`, task).pipe(
+    return of({ ...task }).pipe(
       tap((updatedTaskFromServer) => {
         this._tasks.update((prevTasks) => {
           return prevTasks.map((oldTask) =>
@@ -123,15 +129,43 @@ export class TaskSortService {
     });
   }
 
+  // startSimulation() {
+  //   return interval(10000).pipe(
+  //     // switchMap(() => this.getTasks()),
+  //     map(() => this._tasks()),
+  //     map((tasks) => tasks.filter((t) => t.status === 'Unassigned')),
+  //     filter((availableTasks) => availableTasks.length > 0),
+  //     map((availableTasks) => {
+  //       const task = availableTasks[Math.floor(Math.random() * availableTasks.length)];
+  //       const randomDriverId = task.id;
+  //       return {
+  //         assignedTask: { ...task, status: 'Assigned' as const, driverId: randomDriverId },
+  //         driverId: randomDriverId,
+  //       };
+  //     }),
+  //     concatMap(({ assignedTask, driverId }) =>
+  //       this.updateTask(assignedTask).pipe(
+  //         switchMap(() => this.driverSortService.addTaskToDriver(driverId, assignedTask)),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   startSimulation() {
     return interval(10000).pipe(
-      // switchMap(() => this.getTasks()),
       map(() => this._tasks()),
       map((tasks) => tasks.filter((t) => t.status === 'Unassigned')),
-      filter((availableTasks) => availableTasks.length > 0),
+      filter(
+        (availableTasks) =>
+          availableTasks.length > 0 && this.driverSortService.driversCompare().length > 0,
+      ),
       map((availableTasks) => {
         const task = availableTasks[Math.floor(Math.random() * availableTasks.length)];
-        const randomDriverId = Math.floor(Math.random() * 6) + 1;
+
+        const currentDrivers = this.driverSortService.driversCompare();
+        const randomDriver = currentDrivers[Math.floor(Math.random() * currentDrivers.length)];
+        const randomDriverId = randomDriver.id;
+
         return {
           assignedTask: { ...task, status: 'Assigned' as const, driverId: randomDriverId },
           driverId: randomDriverId,

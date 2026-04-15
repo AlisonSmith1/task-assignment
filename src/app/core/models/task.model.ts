@@ -5,17 +5,17 @@ export interface LatestOverride {
   fromDriverId: number;
 }
 
-export class Task {
-  readonly id: number = 0;
-  readonly createdAt: Date = new Date();
+export interface Task {
+  readonly id: number;
+  readonly createdAt: Date;
 
-  title: string = '';
+  title: string;
   driverId?: number;
-  description: string = '';
-  priority: 'High' | 'Medium' | 'Low' = 'Low';
-  status: 'Unassigned' | 'Assigned' | 'Accepted' | 'Completed' = 'Unassigned';
+  description: string;
+  priority: 'High' | 'Medium' | 'Low';
+  status: 'Unassigned' | 'Assigned' | 'Accepted' | 'Completed';
   deadline?: Date;
-  overrideHistory: LatestOverride[] = [];
+  overrideHistory: LatestOverride[];
   snapshot?: {
     title: string;
     description: string;
