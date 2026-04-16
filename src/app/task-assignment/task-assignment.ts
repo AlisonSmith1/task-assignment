@@ -103,22 +103,27 @@ export class TaskAssignment implements OnInit {
   //       },
   //     });
   // }
+
   ngOnInit(): void {
+    // 啟動模擬器--將任務狀態從 Unassigned 變更為 Assigned
     this.simulation = this.taskSortService.startSimulation().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
+    // 啟動模擬器--將任務狀態從 Assigned 變更為 Accepted
     this.simulationAccepted = this.driverSortService.startSimulation().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
+    // 啟動模擬器--將任務狀態從 Accepted 變更為 Completed
     this.simulationComplete = this.driverSortService.startSimulationComplete().subscribe({
       next: () => console.log('模擬器：偵測中...'),
       error: (err) => console.error('模擬器錯誤:', err),
     });
 
+    // 頁面初始化時，如果任務池或司機列表為空，則嘗試從後端 API 取得資料；如果 API 失敗，則使用 MOCK 資料
     if (this.unassignedTasks().length === 0) {
       this.taskSortService
         .fetchTasks()
@@ -133,7 +138,6 @@ export class TaskAssignment implements OnInit {
           },
         });
     }
-
     if (this.driversCompare().length === 0) {
       this.driverSortService
         .getTasks()
@@ -148,6 +152,7 @@ export class TaskAssignment implements OnInit {
   }
 
   ngOnDestroy() {
+    // 確保在組件銷毀時，所有模擬器都能安全關閉，避免記憶體洩漏或不必要的後台運算
     if (this.simulation) {
       this.simulation.unsubscribe();
       console.log('模擬器已安全關閉');
@@ -202,6 +207,8 @@ export class TaskAssignment implements OnInit {
   //       this.cdr.markForCheck();
   //     });
   // }
+
+  // 理由對話框：當需要將任務從司機身上移回任務池時，會彈出一個對話框讓使用者輸入取消指派的原因，並將該原因記錄在任務的 overrideHistory 中
   reasonDialog(task: Task) {
     const dialogRef = this.dialog.open(ReasonDialog, { data: { task }, width: '400px' });
 
@@ -227,7 +234,6 @@ export class TaskAssignment implements OnInit {
       });
   }
 
-  // 將任務池的任務移動到司機身上
   // drop(event: CdkDragDrop<Task[]>) {
   //   if (event.previousContainer === event.container) {
   //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -262,6 +268,7 @@ export class TaskAssignment implements OnInit {
   //   }
   // }
 
+  // 將任務池的任務移動到司機身上
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       return;
@@ -302,6 +309,7 @@ export class TaskAssignment implements OnInit {
   //     });
   // }
 
+  // 將任務池的任務移動到司機身上
   private handleTaskAssignmentChange(event: CdkDragDrop<Task[]>, task: Task) {
     const targetId = event.container.id;
     const isAssigning = targetId !== 'todoList';

@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+// import { HttpClient } from '@angular/common/http';
 import { Driver } from '../models/driver.model';
 import { Task } from '../models/task.model';
 import { concatMap, filter, interval, map, Observable, of, tap, delay } from 'rxjs';
@@ -9,20 +9,23 @@ import { MOCK_DRIVERS } from '../mocks/mock-drivers';
   providedIn: 'root',
 })
 export class DriverSortService {
-  private http = inject(HttpClient);
+  // private http = inject(HttpClient);
   // private readonly apiUrl = 'http://localhost:3000/drivers';
 
   private _drivers = signal<Driver[]>([]);
 
+  // 司機排序
   driversCompare = computed(() => {
     const drivers = this._drivers();
     return this.sortDrivers(drivers);
   });
 
+  // 設定司機資料
   setDrivers(drivers: Driver[]) {
     this._drivers.set(drivers);
   }
 
+  // 取得司機資料
   getTasks() {
     // return this.http.get<Driver[]>(this.apiUrl);
     return of(MOCK_DRIVERS).pipe(delay(300));
@@ -44,6 +47,8 @@ export class DriverSortService {
   //     }),
   //   );
   // }
+
+  // 從司機的任務列表中移除指定任務
   removeTaskFromDriver(taskId: string) {
     this._drivers.update((drivers) => {
       return drivers.map((d) => {
@@ -57,6 +62,7 @@ export class DriverSortService {
     });
   }
 
+  // 將任務加入指定司機的任務列表中，如果該任務已存在則更新它
   addTaskToDriver(driverId: number, task: Task): Observable<any> {
     const targetDriver = this._drivers().find((d) => String(d.id) === String(driverId));
     if (!targetDriver) return of(null);
@@ -77,6 +83,7 @@ export class DriverSortService {
     );
   }
 
+  // 司機排序邏輯：目前是根據「已指派任務數量」來排序，任務數量越少的司機會被排在前面
   sortDrivers(drivers: Driver[]): Driver[] {
     return [...drivers].sort((a, b) => a.tasks.length - b.tasks.length);
   }
@@ -107,6 +114,7 @@ export class DriverSortService {
     );
   }
 
+  // 模擬司機「自動完成任務」的邏輯
   startSimulationComplete() {
     return interval(45000).pipe(
       map(() => this._drivers()),

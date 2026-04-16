@@ -24,15 +24,17 @@ import { MOCK_TASKS } from '../mocks/mock-data';
 })
 export class TaskSortService {
   private driverSortService = inject(DriverSortService);
+  // 根據任務的優先級、截止日期和創建時間進行排序
   private getPriorityWeight(priority: 'High' | 'Medium' | 'Low'): number {
     const weights = { High: 3, Medium: 2, Low: 1 };
     return weights[priority] || 0;
   }
-  private http = inject(HttpClient);
+  // private http = inject(HttpClient);
   // private readonly apiUrl = 'http://localhost:3000/tasks';
 
   private _tasks = signal<Task[]>([]);
 
+  // 從任務列表中篩選出狀態為「Unassigned」的任務，並根據優先級、截止日期和創建時間進行排序
   unassignedTasks = computed(() => {
     const allTasks = this._tasks();
     const filtered = allTasks.filter((t) => t.status === 'Unassigned');
@@ -54,6 +56,8 @@ export class TaskSortService {
   //     ),
   //   );
   // }
+
+  // 從 MOCK_TASKS 取得任務資料，並將其轉換為 Task 物件的格式，最後將資料存入 _tasks 信號中
   fetchTasks(): Observable<any> {
     // return this.http.get<any[]>(this.apiUrl).pipe(
     return of(MOCK_TASKS).pipe(
@@ -72,6 +76,8 @@ export class TaskSortService {
   // updateTask(task: any) {
   //   return this.http.patch(`${this.apiUrl}/${task.id}`, task);
   // }
+
+  // 更新任務的狀態或其他屬性，並在更新成功後將最新的任務資料反映在本地的 _tasks 信號中
   updateTask(task: Task): Observable<any> {
     // return this.http.patch<Task>(`${this.apiUrl}/${task.id}`, task).pipe(
     return of({ ...task }).pipe(
@@ -103,6 +109,7 @@ export class TaskSortService {
   //   });
   // }
 
+  // 根據任務的優先級、截止日期和創建時間進行排序
   sortTasks(tasks: Task[]): Task[] {
     return tasks.slice().sort((a, b) => {
       const priorityDiff = this.getPriorityWeight(b.priority) - this.getPriorityWeight(a.priority);

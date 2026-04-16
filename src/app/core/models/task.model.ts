@@ -1,3 +1,4 @@
+// 歷史紀錄模型
 export interface LatestOverride {
   readonly timestamp: Date;
   readonly operatorId: string;
@@ -5,6 +6,7 @@ export interface LatestOverride {
   fromDriverId: number;
 }
 
+// 任務模型
 export interface Task {
   readonly id: number;
   readonly createdAt: Date;
