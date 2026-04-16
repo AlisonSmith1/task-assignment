@@ -29,7 +29,8 @@
           "options": {
             "outputPath": {
               "base": "dist/task-assignment",
-              "browser": ""
+              "browser": "browser",
+              "server": "server"
             },
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
