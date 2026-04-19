@@ -141,3 +141,23 @@ $drag-placeholder-color: #dae0ff;
 .cdk-drag-animating {
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+/*
+   畫面響應式調整
+*/
+@media screen and (max-width: 700px) {
+  .main-container {
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 45px;
+
+    .column {
+      width: 100%;
+    }
+  }
+
+  .task-pool {
+    overflow: hidden;
+    max-height: 300px;
+  }
+}

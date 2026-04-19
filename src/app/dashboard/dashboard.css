@@ -1,0 +1,16 @@
+@charset "UTF-8";
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* 防止最外層出現捲軸 */
+}
+
+app-navbar {
+  flex-shrink: 0;
+}
+
+.main {
+  flex-grow: 1; /* 讓內容區自動撐滿剩餘空間 */
+  overflow-y: auto;
+}/*# sourceMappingURL=dashboard.css.map */
