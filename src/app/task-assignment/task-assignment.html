@@ -11,7 +11,11 @@
       @for (task of unassignedTasks(); track task.id) {
         <div class="task-item" cdkDrag>
           <strong>{{ task.title }}</strong>
+                  <div class="drag-handle" cdkDragHandle>
+    <span>⠿</span> 
+  </div>
         </div>
+
       }
     </div>
   </div>
