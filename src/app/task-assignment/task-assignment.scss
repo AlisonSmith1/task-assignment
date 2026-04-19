@@ -145,7 +145,7 @@ $drag-placeholder-color: #dae0ff;
 /*
    畫面響應式調整
 */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1000px) {
   .main-container {
     flex-direction: column;
     padding: 20px;
