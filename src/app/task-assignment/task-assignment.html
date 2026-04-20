@@ -15,10 +15,9 @@
           </div>
 
           <div class="drag-handle" cdkDragHandle>
-            <span>⠿</span> 
+            <span>⠿</span>
           </div>
         </div>
-
       }
     </div>
   </div>
@@ -27,33 +26,34 @@
 
   <div class="column assignment-area">
     <div class="header">司機的行程</div>
-
-    @for (driver of driversCompare(); track driver.id) {
-      <div
-        class="driver-card"
-        cdkDropList
-        [id]="driver.id.toString()"
-        [cdkDropListData]="driver.tasks"
-        (cdkDropListDropped)="drop($event)"
-      >
-        <div class="driver-info">
-          <strong>{{ driver.name }} (ID: {{ driver.id }})</strong>
-        </div>
-
-        @for (task of driver.tasks; track task.id) {
-          <div class="task-item" cdkDrag [cdkDragDisabled]="true">
-            {{ task.title }}
-            <button
-              type="button"
-              (click)="reasonDialog(task)"
-              [disabled]="task.status == 'Accepted'"
-              [class.disabled-btn]="task.status == 'Accepted'"
-            >
-              回溯
-            </button>
+    <div class="driver-list" cdkScrollable>
+      @for (driver of driversCompare(); track driver.id) {
+        <div
+          class="driver-card"
+          cdkDropList
+          [id]="driver.id.toString()"
+          [cdkDropListData]="driver.tasks"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div class="driver-info">
+            <strong>{{ driver.name }} (ID: {{ driver.id }})</strong>
           </div>
-        }
-      </div>
-    }
+
+          @for (task of driver.tasks; track task.id) {
+            <div class="task-item" cdkDrag [cdkDragDisabled]="true">
+              {{ task.title }}
+              <button
+                type="button"
+                (click)="reasonDialog(task)"
+                [disabled]="task.status == 'Accepted'"
+                [class.disabled-btn]="task.status == 'Accepted'"
+              >
+                回溯
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
   </div>
 </div>

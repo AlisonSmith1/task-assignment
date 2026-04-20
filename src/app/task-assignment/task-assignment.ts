@@ -25,13 +25,14 @@ import {
   transferArrayItem,
   DragDropModule,
 } from '@angular/cdk/drag-drop';
+import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-task-assignment',
   standalone: true,
   templateUrl: './task-assignment.html',
   styleUrl: './task-assignment.scss',
-  imports: [CdkDrag, CdkDropList, DragDropModule],
+  imports: [CdkDrag, CdkDropList, DragDropModule, CdkScrollable],
 })
 export class TaskAssignment implements OnInit {
   simulation: any;
