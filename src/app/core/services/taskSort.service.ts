@@ -18,6 +18,7 @@ import {
 } from 'rxjs';
 import { DriverSortService } from './driver-sort.service';
 import { MOCK_TASKS } from '../mocks/mock-data';
+import { create } from 'node:domain';
 
 @Injectable({
   providedIn: 'root',
@@ -183,6 +184,33 @@ export class TaskSortService {
           switchMap(() => this.driverSortService.addTaskToDriver(driverId, assignedTask)),
         ),
       ),
+    );
+  }
+
+  addTask(task: { title: string; description: string; priority: string }) {
+    return of({
+      id: Date.now(),
+      title: task.title,
+      description: task.description,
+      priority: task.priority as 'High' | 'Medium' | 'Low',
+      status: 'Unassigned' as const,
+      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      overrideHistory: [],
+      createdAt: new Date(),
+    }).pipe(
+      delay(100),
+      tap((newTask) => {
+        this._tasks.update((tasks) => [...tasks, newTask]);
+      }),
+    );
+  }
+
+  removeTask(title: string) {
+    return of(null).pipe(
+      delay(100),
+      tap(() => {
+        this._tasks.update((tasks) => tasks.filter((d) => d.title !== title));
+      }),
     );
   }
 }

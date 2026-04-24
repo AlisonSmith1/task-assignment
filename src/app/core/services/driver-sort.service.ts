@@ -139,4 +139,23 @@ export class DriverSortService {
       concatMap(({ updatedTask, driverId }) => this.addTaskToDriver(driverId, updatedTask)),
     );
   }
+
+  addDriver(driver: { name: string }) {
+    // return this.http.post<Driver>(this.apiUrl, driver).pipe(
+    return of({ id: Date.now(), name: driver.name, tasks: [] }).pipe(
+      delay(100),
+      tap((newDriver) => {
+        this._drivers.update((drivers) => [...drivers, newDriver]);
+      }),
+    );
+  }
+
+  removeDriver(name: string) {
+    return of(null).pipe(
+      delay(100),
+      tap(() => {
+        this._drivers.update((drivers) => drivers.filter((d) => d.name !== name));
+      }),
+    );
+  }
 }

@@ -1,1 +1,52 @@
-<router-outlet></router-outlet>
+<mat-drawer-container class="local-container" [hasBackdrop]="true">
+  <mat-drawer #drawer mode="over" position="end">
+    <button class="switch" (click)="toggleList()">
+      @if (drawerMode === 'driver') {
+        編輯任務列表
+      } @else {
+        編輯司機列表
+      }
+    </button>
+
+    @if (drawerMode === 'task') {
+      <div class="drawer-inner">
+        <h3>新增任務</h3>
+        <input type="text" [(ngModel)]="newTask.title" placeholder="名稱" />
+        <input type="text" [(ngModel)]="newTask.description" placeholder="描述" />
+        <input type="text" [(ngModel)]="newTask.priority" placeholder="緊急程度" />
+        <button (click)="addTask(); drawer.close()">送出</button>
+      </div>
+    }
+
+    @if (drawerMode === 'driver') {
+      <div class="drawer-inner">
+        <h3>新增司機</h3>
+        <input type="text" [(ngModel)]="newDriver.name" placeholder="名稱" />
+        <button (click)="addDriver(); drawer.close()">送出</button>
+      </div>
+    }
+
+    @if (drawerMode === 'task') {
+      <div class="drawer-inner">
+        <h3>刪除任務</h3>
+        <input type="text" [(ngModel)]="taskNameToDelete" placeholder="姓名" />
+        <button (click)="removeTask(taskNameToDelete); drawer.close()">送出</button>
+      </div>
+    }
+
+    @if (drawerMode === 'driver') {
+      <div class="drawer-inner">
+        <h3>刪除司機</h3>
+        <input type="text" [(ngModel)]="driverNameToDelete" placeholder="姓名" />
+        <button (click)="removeDriver(driverNameToDelete); drawer.close()">送出</button>
+      </div>
+    }
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <button class="button-open" mat-raised-button color="primary" (click)="drawer.open()">
+      編輯
+    </button>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

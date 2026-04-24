@@ -10,10 +10,19 @@ import { ReasonDialog } from './reason-dialog/reason-dialog';
 import { AboutComponent } from './about/about';
 import { ServeComponent } from './serve/serve';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [App, Navbar, DashboardComponent, AboutComponent, ServeComponent],
-  imports: [BrowserModule, AppRoutingModule, TaskAssignment, ReasonDialog],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    TaskAssignment,
+    ReasonDialog,
+    MatSidenavModule,
+    FormsModule,
+  ],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideClientHydration(withEventReplay()),
