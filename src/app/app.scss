@@ -74,10 +74,10 @@ button {
 @media (max-width: 768px) {
   .button-open {
     position: fixed;
-    bottom: 85%;
+    top: 50px;
     right: 20px;
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background-color: #b1b5b9;
     color: white;
