@@ -1,12 +1,16 @@
 <mat-drawer-container class="local-container" [hasBackdrop]="true">
   <mat-drawer #drawer mode="over" position="end">
-    <button class="switch" (click)="toggleList()">
-      @if (drawerMode === 'driver') {
-        編輯任務列表
-      } @else {
-        編輯司機列表
-      }
-    </button>
+    <div style="display: flex">
+      <button class="switch" (click)="toggleList()">
+        @if (drawerMode === 'driver') {
+          切換任務列表編輯
+        } @else {
+          切換司機列表編輯
+        }
+      </button>
+
+      <button class="x" (click)="drawer.close()">✕</button>
+    </div>
 
     @if (drawerMode === 'task') {
       <div class="drawer-inner">

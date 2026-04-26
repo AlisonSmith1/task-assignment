@@ -1,63 +1,50 @@
-# TaskAssignment
+# 任務分配管理系統 (Task Assignment System)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+本專案是一個基於 **Angular 21** 架構開發的現代化任務調度系統。核心功能模擬企業內部的配送派單流程，提供直覺的介面處理任務從「未分配池」指派給「特定司機」的邏輯。
 
-## Development server
+## 技術亮點
 
-To start a local development server, run:
+- **現代化 Angular 21 架構**：完整採用 **Standalone Components** 並導入 **SSR (Server-Side Rendering)**，提升首屏載入速度與 SEO 優化潛力。
+- **高效能狀態管理 (Signals + RxJS)**：
+  - 使用 **Signals** 管理細粒度的元件狀態，減少不必要的變更偵測，提升運行效能。
+  - 結合 **RxJS** 處理異步資料流與複雜的業務邏輯，確保任務分配狀態在各元件間即時同步。
+- **專業 UI 互動實作**：運用 **Angular CDK Drag and Drop** 打造流暢的拖曳式分配介面，並整合 **Angular Material** 提供一致且專業的視覺體驗。
 
-```bash
-ng serve
-```
+## 核心功能
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **直覺式拖曳分配**：使用者可將任務池中的項目直接拖曳至目標司機，系統會自動處理資料關聯更新。
+- **任務撤回與日誌**：支援將已指派任務退回池中，並要求輸入撤回原因，相關記錄會儲存於任務歷史紀錄中，確保操作可追蹤性。
+- **進度狀態模擬**：完整模擬任務生命週期（未分配 → 已分配 → 已接受 → 已完成），提供即時的視覺化狀態反饋。
+- **高擬真資料環境**：透過 `json-server` 搭配 `faker` 建構 RESTful API，模擬真實後端回傳延遲與大量數據處理情境。
 
-## Code scaffolding
+## 開始使用
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 環境需求
 
-```bash
-ng generate component component-name
-```
+- Node.js (建議版本 20+)
+- npm (建議版本 10+)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 安裝與執行
 
-```bash
-ng generate --help
-```
+1.  **複製專案**：
+    ```bash
+    git clone [https://github.com/AlisonSmith1/task-assignment.git](https://github.com/AlisonSmith1/task-assignment.git)
+    cd task-assignment
+    ```
+2.  **安裝依賴**：
+    ```bash
+    npm install
+    ```
+3.  **啟動開發環境**（包含 Mock API 與前端伺服器）：
+    ```bash
+    npm start
+    ```
+    啟動後請前往 `http://localhost:4200/` 即可操作。
 
-## Building
+## 建置與優化
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+執行以下指令編譯生產環境版本：
 
 ```bash
-ng e2e
+npm run build
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-"# task-assignment" 
-"# tasks-assigment" 
-"# task-assignment" 
-"# task-assignment" 
