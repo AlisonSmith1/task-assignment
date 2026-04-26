@@ -188,11 +188,12 @@ export class TaskSortService {
   }
 
   addTask(task: { title: string; description: string; priority: string }) {
+    type Priority = 'High' | 'Medium' | 'Low';
     return of({
       id: Date.now(),
       title: task.title,
       description: task.description,
-      priority: task.priority as 'High' | 'Medium' | 'Low',
+      priority: task.priority as Priority,
       status: 'Unassigned' as const,
       deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       overrideHistory: [],
