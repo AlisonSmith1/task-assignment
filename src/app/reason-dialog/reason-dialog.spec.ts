@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReasonDialog } from './reason-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ReasonDialog', () => {
   let component: ReasonDialog;
@@ -8,7 +9,11 @@ describe('ReasonDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ReasonDialog]
+      imports: [ReasonDialog],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ]
     })
     .compileComponents();
 

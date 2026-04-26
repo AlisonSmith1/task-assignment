@@ -1,7 +1,12 @@
-import { Driver } from './drivermodel';
+import { Driver } from './driver.model';
 
 describe('Driver', () => {
-  it('should create an instance', () => {
-    expect(new Driver()).toBeTruthy();
+  it('should have a type definition', () => {
+    const driver: Driver = {
+      id: 1,
+      name: 'Test Driver',
+      tasks: []
+    };
+    expect(driver).toBeTruthy();
   });
 });
