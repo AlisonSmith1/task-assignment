@@ -7,14 +7,14 @@ import { TaskAssignment } from './task-assignment/task-assignment';
 import { Navbar } from './navbar/navbar';
 import { DashboardComponent } from './dashboard/dashboard';
 import { ReasonDialog } from './reason-dialog/reason-dialog';
-import { AboutComponent } from './about/about';
-import { ServeComponent } from './serve/serve';
+import { HomeComponent } from './home/home';
+
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [App, Navbar, DashboardComponent, AboutComponent, ServeComponent],
+  declarations: [App, Navbar, DashboardComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

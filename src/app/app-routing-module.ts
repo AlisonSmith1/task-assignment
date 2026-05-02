@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard';
-import { AboutComponent } from './about/about';
-import { ServeComponent } from './serve/serve';
+import { HomeComponent } from './home/home';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -10,9 +9,8 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     children: [
-      { path: '', redirectTo: 'assignment', pathMatch: 'full' },
-      { path: 'about', component: AboutComponent },
-      { path: 'serve', component: ServeComponent },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: HomeComponent },
       {
         path: 'assignment',
         loadComponent: () =>

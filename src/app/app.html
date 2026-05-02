@@ -15,11 +15,11 @@
     @if (drawerMode === 'task') {
       <div class="drawer-inner">
         <h3>新增任務</h3>
-        <input type="text" [(ngModel)]="newTask.title" placeholder="任務名稱" required />
+        <input type="text" min="3" [(ngModel)]="newTask.title" placeholder="任務名稱" required />
         @if (!newTask.title) {
           <p style="color: red">請輸入任務名稱</p>
         }
-        <input type="text" [(ngModel)]="newTask.description" placeholder="描述" required />
+        <input type="text" min="10" [(ngModel)]="newTask.description" placeholder="描述" required />
         @if (!newTask.description) {
           <p style="color: red">請輸入描述欄位</p>
         }
@@ -41,7 +41,7 @@
     @if (drawerMode === 'driver') {
       <div class="drawer-inner">
         <h3>新增司機</h3>
-        <input type="text" [(ngModel)]="newDriver.name" placeholder="司機名稱" />
+        <input type="text" min="3" [(ngModel)]="newDriver.name" placeholder="司機名稱" />
         @if (!newDriver.name) {
           <p style="color: red">請輸入司機名稱</p>
         }
@@ -52,7 +52,7 @@
     @if (drawerMode === 'task') {
       <div class="drawer-inner">
         <h3>刪除任務</h3>
-        <input type="text" [(ngModel)]="taskNameToDelete" placeholder="任務名稱" />
+        <input type="text" min="3" [(ngModel)]="taskNameToDelete" placeholder="任務名稱" />
         <button (click)="removeTask(taskNameToDelete)">送出</button>
       </div>
     }
@@ -60,7 +60,7 @@
     @if (drawerMode === 'driver') {
       <div class="drawer-inner">
         <h3>刪除司機</h3>
-        <input type="text" [(ngModel)]="driverNameToDelete" placeholder="司機名稱" />
+        <input type="text" min="3" [(ngModel)]="driverNameToDelete" placeholder="司機名稱" />
         <button (click)="removeDriver(driverNameToDelete)">送出</button>
       </div>
     }

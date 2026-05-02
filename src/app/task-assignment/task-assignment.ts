@@ -57,6 +57,10 @@ export class TaskAssignment implements OnInit {
         currentTasks.map((t) => t.id),
       );
       console.log(
+        '回朔紀錄:',
+        currentTasks.map((t) => t.overrideHistory),
+      );
+      console.log(
         '司機資料:',
         currentDrivers.map((d) => ({ name: d.name, tasks: d.tasks.map((t) => t.id) })),
       );

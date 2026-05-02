@@ -7,7 +7,7 @@ $drag-placeholder-color: #dae0ff;
 .main-container {
   display: flex;
   gap: 20px;
-  padding: 65px;
+  padding: 70px 20px;
   // height: calc(100vh - 40px);
   background-color: #fff;
 
@@ -155,7 +155,7 @@ $drag-placeholder-color: #dae0ff;
     flex-direction: column;
     height: 90dvh;
     overflow: hidden;
-    padding: 20px;
+    padding: 60px 20px;
     margin-top: 45px;
 
     .column.task-pool {

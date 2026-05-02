@@ -1,0 +1,67 @@
+<div class="home-container">
+  <header class="hero-section">
+    <h1 class="title">Logistics Task Assignment</h1>
+    <p class="subtitle">智慧物流派單與狀態追蹤系統</p>
+    <div class="divider"></div>
+  </header>
+
+  <section class="content-section">
+    <h2 class="section-title">Project Overview</h2>
+    <p class="description">
+      本系統專為高複雜度的物流指派情境設計。透過直覺的拖曳操作與自動化的狀態模擬，
+      協助站所調度員快速將任務分配給適切的物流司機。系統具備高容錯的本地狀態記憶機制，
+      確保在複雜的操作下依然保持資料流的一致性。
+    </p>
+  </section>
+
+  <section class="content-section">
+    <h2 class="section-title">Tech Stack & Architecture</h2>
+    <div class="grid-container">
+      <div class="tech-card">
+        <h3>Angular 21 & NgModule</h3>
+        <p>採用穩健的 NgModule 模組化架構，確保大型專案的擴充性與依賴注入的清晰度。</p>
+      </div>
+
+      <div class="tech-card">
+        <h3>Reactive State (Signals)</h3>
+        <p>
+          捨棄傳統的變數綁定，全面導入 Angular Signals，實現細粒度 (Fine-grained)
+          的畫面渲染與高效能狀態管理。
+        </p>
+      </div>
+
+      <div class="tech-card">
+        <h3>RxJS Data Flow</h3>
+        <p>
+          運用 Observable, switchMap, concatMap 等進階運算子，完美處理非同步的自動化模擬器與 API
+          延遲狀態。
+        </p>
+      </div>
+
+      <div class="tech-card">
+        <h3>CDK Drag & Drop</h3>
+        <p>
+          客製化底層拖曳邏輯，解決了跨元件資料傳遞與手機端觸控滾動 (Touch Hijacking) 的原生限制。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2 class="section-title">Core Features</h2>
+    <ul class="feature-list">
+      <li>
+        <strong>Mock API 架構：</strong> 拔除實體資料庫依賴，透過純前端攔截與記憶體更新，實現 100%
+        靜態化部署。
+      </li>
+      <li>
+        <strong>自動化狀態機：</strong> 內建 RxJS
+        驅動的背景模擬器，真實還原司機「已接受」、「已完成」的任務生命週期。
+      </li>
+      <li>
+        <strong>響應式佈局：</strong>
+        針對行動裝置優化的分割視窗設計，確保在窄螢幕下依然保有頂級的拖曳與滾動體驗。
+      </li>
+    </ul>
+  </section>
+</div>
