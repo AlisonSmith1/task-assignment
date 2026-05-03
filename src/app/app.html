@@ -67,9 +67,11 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <button class="button-open" mat-raised-button color="primary" (click)="drawer.open()">
-      編輯
-    </button>
+    @if (router.url === '/dashboard/assignment') {
+      <button class="button-open" mat-raised-button color="primary" (click)="drawer.open()">
+        編輯
+      </button>
+    }
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>

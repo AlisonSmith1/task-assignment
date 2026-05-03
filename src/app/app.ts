@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Task } from './core/models/task.model';
 import { TaskSortService } from './core/services/taskSort.service';
 import { DriverSortService } from './core/services/driver-sort.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,8 @@ export class App {
 
   private taskSortService = inject(TaskSortService);
   private driverSortService = inject(DriverSortService);
+
+  constructor(public router: Router) {}
 
   addNewTasks = this.taskSortService.unassignedTasks;
   addNewDrivers = this.driverSortService.driversCompare;
